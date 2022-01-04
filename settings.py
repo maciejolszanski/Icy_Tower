@@ -13,3 +13,10 @@ class Settings():
         self.floor_color = (153, 0, 153)
         self.floor_border_color = (102, 0, 102)
         self.floor_border_width = 4
+
+        # hero settings
+        self.run_speed = 2
+        self.jump_v0 = 1
+
+        # physics settings
+        self.gravity = 1

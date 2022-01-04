@@ -25,4 +25,3 @@ class Floor(Sprite):
     def blitme(self):
         pygame.draw.rect(self.it_game.screen, self.floor_border_color, self.floor_rect_outer)
         pygame.draw.rect(self.it_game.screen, self.floor_color, self.floor_rect_inner)
-    #    pygame.display.flip()

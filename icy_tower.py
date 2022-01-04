@@ -1,8 +1,10 @@
 import pygame, sys
 from time import sleep
+import time
 
 import settings
 import floors
+import hero
 
 class IcyTower():
     '''
@@ -27,23 +29,51 @@ class IcyTower():
             )
 
         self.main_floor = floors.Floor(self,self.main_floor_size)
+        self.hero = hero.Hero(self)
 
     def run_game(self):
         '''Starting the main loop of the game'''
         while True:
-            # Waiting for the event to quit the game
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
-
+            self._check_events()
+            self.hero.update()
             self._update_screen()
+
+    def _check_events(self):
+        '''manage events of the game'''
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                self._check_keydown_events(event)
+            if event.type == pygame.KEYUP:
+                self._check_keyup_events(event)
+
+    def _check_keydown_events(self,event):
+        '''check what key is pressed'''
+        if event.key == pygame.K_LEFT:
+            self.hero.moving_left = True
+            self.hero.change_x_direction = True
+        if event.key == pygame.K_RIGHT:
+            self.hero.moving_right = True
+            self.hero.change_x_direction = True
+        if event.key == pygame.K_SPACE:
+            self.hero.jump_start_time = time.time()
+            self.hero.jump_start_y = self.hero.y
+            self.hero.jump = True
+
+    def _check_keyup_events(self,event):
+        '''check what key is released'''
+        if event.key == pygame.K_LEFT:
+            self.hero.moving_left = False
+        if event.key == pygame.K_RIGHT:
+            self.hero.moving_right = False
 
     def _update_screen(self):
         '''refreshing screen in each iteration'''
         self.screen.fill(self.settings.bg_color)
         self.main_floor.blitme()
-        pygame.display.flip()
-
+        self.hero.blitme()
+        pygame.display.flip() 
 
 
 if __name__ == '__main__':
