@@ -7,8 +7,6 @@ class Hero():
 
     def __init__(self, it_game):
 
-        self.main_floor = it_game.main_floor
-
         self.it_game = it_game
         self.screen = it_game.screen
         self.screen_rect = self.screen.get_rect()
@@ -19,7 +17,7 @@ class Hero():
         self.image = pygame.image.load('images/hero.png')
         self.image = pygame.transform.scale(self.image, self.hero_size)
         self.rect = self.image.get_rect()
-        self.rect.midbottom = it_game.main_floor.floor_rect_outer.midtop
+        # self.rect.midbottom = it_game.main_floor.floor_rect_outer.midtop
 
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
@@ -94,23 +92,42 @@ class Hero():
         elif self.moving_down:
             self.y +=  1/2 * (self.settings.gravity * self.drop_time**2)
 
-        self._check_collision(self.it_game.floors)
+            self._check_collision(self.it_game.floors)
             
         # update the image y-pos    
         self.rect.y = self.y
 
     def _check_collision(self, floors):
+        '''collision with floors'''
 
-        # collision with main floor stops the flight
-        if (self.rect.bottom > (self.main_floor.floor_rect_outer.top + 6) and 
-            self.flight_time > 0.1): 
-            # if hero is slighly under top of the main floor set its y-position 
-            # to correct one  
-            self.rect.bottom = self.main_floor.floor_rect_outer.top
-            self.y = self.rect.top
-            self.moving_down = False
-            self.in_air = False
-            self.jump = False
+        for floor in floors:
+            if self.rect.centerx in range(floor.rect_outer.left, 
+                                        floor.rect_outer.right):
+                if (self.rect.bottom > (floor.rect_outer.top)  
+                    and self.rect.bottom < floor.rect_outer.bottom 
+                    and self.flight_time > 0.1): 
+                    # if hero is slighly under top of the floor set its y-position 
+                    # to correct one  
+                    self.rect.bottom = floor.rect_outer.top
+                    self.y = self.rect.top
+                    self.moving_down = False
+                    self.in_air = False
+                    self.jump = False
+                    break
+    
+    def check_falling(self, floors):
+        '''check if hero stepped out from a floor'''
+        for floor in floors:
+            if self.rect.bottom in range(floor.rect_outer.top 
+                - self.settings.dist_between_floors  + 20, floor.rect_outer.top + 10):
+                if self.rect.centerx not in list(range(floor.rect_outer.left, 
+                                        floor.rect_outer.right)):
+                    self.moving_down = True
+                    self.jump = True
+                    self.in_air = True
+                    self.drop_start_time = time.time()
+                    self._fly()
+                    
 
     def blitme(self):
         '''displaying the hero on the screen'''

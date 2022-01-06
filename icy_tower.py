@@ -22,14 +22,6 @@ class IcyTower():
             (self.settings.screen_width,self.settings.screen_height))
         pygame.display.set_caption("Icy_Tower")
 
-        self.main_floor_size = (
-            self.screen.get_rect().x,
-            self.screen.get_rect().bottom - self.settings.floor_height - 20,
-            self.screen.get_rect().width,
-            self.settings.floor_height,
-            )
-
-        self.main_floor = floors.Floor(self,self.main_floor_size)
         self.floors = pygame.sprite.Group()
         self._create_initial_floors()
         self.hero = hero.Hero(self)
@@ -38,6 +30,8 @@ class IcyTower():
         '''Starting the main loop of the game'''
         while True:
             self._check_events()
+            if not self.hero.in_air:
+                self.hero.check_falling(self.floors)
             self.hero.update()
             self._update_screen()
 

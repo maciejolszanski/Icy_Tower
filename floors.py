@@ -12,10 +12,10 @@ class Floor(Sprite):
         self.screen = it_game.screen
         self.settings = it_game.settings
 
-        self.floor_color = self.settings.floor_color
-        self.floor_border_color = self.settings.floor_border_color
-        self.floor_rect_outer = pygame.Rect(size)
-        self.floor_rect_inner = pygame.Rect(
+        self.color = self.settings.floor_color
+        self.border_color = self.settings.floor_border_color
+        self.rect_outer = pygame.Rect(size)
+        self.rect_inner = pygame.Rect(
             size[0] + self.settings.floor_border_width,
             size[1] + self.settings.floor_border_width,
             size[2] - 2*self.settings.floor_border_width,
@@ -23,5 +23,5 @@ class Floor(Sprite):
             )
 
     def blitme(self):
-        pygame.draw.rect(self.it_game.screen, self.floor_border_color, self.floor_rect_outer)
-        pygame.draw.rect(self.it_game.screen, self.floor_color, self.floor_rect_inner)
+        pygame.draw.rect(self.it_game.screen, self.border_color, self.rect_outer)
+        pygame.draw.rect(self.it_game.screen, self.color, self.rect_inner)
