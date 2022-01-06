@@ -3,7 +3,7 @@ class Settings():
 
     def __init__(self):
 
-        # Scren settings
+        # screen settings
         self.screen_width = 1200
         self.screen_height = 800
         self.bg_color = (76,0,153)
@@ -13,10 +13,15 @@ class Settings():
         self.floor_color = (153, 0, 153)
         self.floor_border_color = (102, 0, 102)
         self.floor_border_width = 4
+        self.dist_between_floors = 160
+        self.floor_margin = 20
+        self.floor_min_width = 150
+        self.floor_max_width = 300
 
         # hero settings
-        self.run_speed = 2
-        self.jump_v0 = 1
+        self.run_speed = 1.2
+        self.jump_v0 = 1.2
+        self.jump_power = 5.0
 
         # physics settings
         self.gravity = 1

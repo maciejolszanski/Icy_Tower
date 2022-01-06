@@ -1,6 +1,7 @@
 import pygame, sys
 from time import sleep
 import time
+import random
 
 import settings
 import floors
@@ -29,6 +30,8 @@ class IcyTower():
             )
 
         self.main_floor = floors.Floor(self,self.main_floor_size)
+        self.floors = pygame.sprite.Group()
+        self._create_initial_floors()
         self.hero = hero.Hero(self)
 
     def run_game(self):
@@ -56,9 +59,11 @@ class IcyTower():
         if event.key == pygame.K_RIGHT:
             self.hero.moving_right = True
             self.hero.change_x_direction = True
-        if event.key == pygame.K_SPACE:
+        if event.key == pygame.K_SPACE and not self.hero.in_air:
             self.hero.jump_start_time = time.time()
             self.hero.jump_start_y = self.hero.y
+            self.hero.moving_up = True
+            self.hero.in_air = True,
             self.hero.jump = True
 
     def _check_keyup_events(self,event):
@@ -68,10 +73,46 @@ class IcyTower():
         if event.key == pygame.K_RIGHT:
             self.hero.moving_right = False
 
+    def _create_initial_floors(self):
+        '''creating floors that are visible from the beggining of the game'''
+
+
+        available_space = (self.settings.screen_height - 
+        self.settings.floor_height)
+        num_of_floors = available_space // self.settings.dist_between_floors + 1
+
+        for num in range(num_of_floors):
+            if num == 0:
+                size = (
+                    self.screen.get_rect().x,
+                    (self.screen.get_rect().bottom - self.settings.floor_height 
+                    -20),
+                    self.screen.get_rect().width,
+                    self.settings.floor_height,
+                    )
+                floor = floors.Floor(self,size)
+                self.floors.add(floor)
+            else:
+                x_pos = random.randint(self.settings.floor_margin, self.settings.
+                        screen_width - (self.settings.floor_max_width + 
+                        self.settings.floor_margin))
+                y_pos = (self.screen.get_rect().bottom - 
+                        self.settings.floor_height - 20 - 
+                        num*self.settings.dist_between_floors)
+                width = random.randint(self.settings.floor_min_width, 
+                        self.settings.floor_max_width)
+                height = self.settings.floor_height
+            
+                size = (x_pos, y_pos, width, height)
+               
+                floor = floors.Floor(self,size)
+                self.floors.add(floor)
+
     def _update_screen(self):
         '''refreshing screen in each iteration'''
         self.screen.fill(self.settings.bg_color)
-        self.main_floor.blitme()
+        for floor in self.floors:
+            floor.blitme()
         self.hero.blitme()
         pygame.display.flip() 
 
