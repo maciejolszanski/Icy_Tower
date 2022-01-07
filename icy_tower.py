@@ -32,7 +32,12 @@ class IcyTower():
             self._check_events()
             if not self.hero.in_air:
                 self.hero.check_falling(self.floors)
+            # check if there is need to scroll the screen
+            if self.hero.moving_up:
+                self._scroll()
+
             self.hero.update()
+            self._are_new_floors_needed()
             self._update_screen()
 
     def _check_events(self):
@@ -57,7 +62,6 @@ class IcyTower():
             self.hero.jump_start_time = time.time()
             self.hero.jump_start_y = self.hero.y
             self.hero.moving_up = True
-            self.hero.in_air = True,
             self.hero.jump = True
 
     def _check_keyup_events(self,event):
@@ -70,12 +74,13 @@ class IcyTower():
     def _create_initial_floors(self):
         '''creating floors that are visible from the beggining of the game'''
 
-
+        # calculate availabe space and then number of initial floors to be drawn
         available_space = (self.settings.screen_height - 
         self.settings.floor_height)
         num_of_floors = available_space // self.settings.dist_between_floors + 1
 
         for num in range(num_of_floors):
+            # first floor is the width of screen
             if num == 0:
                 size = (
                     self.screen.get_rect().x,
@@ -86,6 +91,7 @@ class IcyTower():
                     )
                 floor = floors.Floor(self,size)
                 self.floors.add(floor)
+            # rest of the floor is randomly sized and places
             else:
                 x_pos = random.randint(self.settings.floor_margin, self.settings.
                         screen_width - (self.settings.floor_max_width + 
@@ -101,6 +107,42 @@ class IcyTower():
                
                 floor = floors.Floor(self,size)
                 self.floors.add(floor)
+
+    def _scroll(self):
+        '''scrolling the bakground while hero is moving up'''
+
+        if self.hero.y < self.settings.screen_height/2:
+            for floor in self.floors:
+                floor.move_down()
+            
+            self.hero.do_scroll = True
+
+    def _are_new_floors_needed(self):
+        '''check if there is new floor needed and creating it'''
+        
+        # check what is the distance between the highest floor and the top of
+        # the screen
+        highest_floor = self.floors.sprites()[-1]
+        dist = highest_floor.rect_outer.top
+        
+        if dist > self.settings.dist_between_floors/2:
+            self._draw_floor(highest_floor)
+
+    def _draw_floor(self, top_floor):
+        '''drawing a new floor on the top''' 
+        x_pos = random.randint(self.settings.floor_margin, self.settings.
+                        screen_width - (self.settings.floor_max_width + 
+                        self.settings.floor_margin))
+        y_pos = (top_floor.rect_outer.top - 
+                self.settings.dist_between_floors)
+        width = random.randint(self.settings.floor_min_width, 
+                self.settings.floor_max_width)
+        height = self.settings.floor_height
+    
+        size = (x_pos, y_pos, width, height)
+
+        floor = floors.Floor(self,size)
+        self.floors.add(floor)
 
     def _update_screen(self):
         '''refreshing screen in each iteration'''

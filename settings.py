@@ -18,9 +18,11 @@ class Settings():
         self.floor_min_width = 150
         self.floor_max_width = 300
 
+        self.scroll_v = 2
+
         # hero settings
         self.run_speed = 1.2
-        self.jump_v0 = 1.2
+        self.jump_v0 = 1.3
         self.jump_power = 5.0
 
         # physics settings
