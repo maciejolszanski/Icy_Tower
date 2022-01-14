@@ -118,7 +118,7 @@ class Hero():
                 # then check if the y position of the hero is slightly beneath the 
                 # floor
                 if (self.rect.bottom > (floor.rect_outer.top)  
-                    and self.rect.bottom < floor.rect_outer.bottom 
+                    and self.rect.bottom < floor.rect_outer.top + 5
                     and self.flight_time > 0.1): 
                     self.rect.bottom = floor.rect_outer.top
                     self.y = self.rect.top
