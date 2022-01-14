@@ -1,0 +1,86 @@
+import pygame
+from pygame.sprite import Sprite
+
+class Menu():
+    '''This class creates a menu and handle navigating the menu'''
+
+    def _init_(self, it_game):
+        '''init the menu with any number of buttons'''
+        self.settings = it_game.settings
+        self.it_game = it_game
+        self.screen = it_game.screen
+        self.active_button = 0
+
+        self.buttons = pygame.sprite.Group()
+        self.but_width = self.settings.button_size(1)
+        self.but_height = self.settings.button_size(2)
+
+        self._generate_buttons()
+
+    def _generate_buttons(self):
+        '''generate buttons that creates a menu'''
+        for text in self.settings.menu_buttons:
+            size = (self.screen.centerx - self.but_width/2, 300*text.index,
+                self.but_width,self.but_height)
+            button = Button(self.it_game, size, text)
+
+
+    def update_menu(self):
+        '''draw menu with updated active button'''
+
+        for button in self.buttons:
+            if button.index() == self.active_button:
+                button.draw_activated()
+            else:
+                button.draw_deactivated()
+         
+
+
+class Button(Sprite):
+    '''create a single Button'''
+
+    def __init__(self, it_game, size, text):
+        '''create a Button'''
+        super().__init__()
+        self.screen = it_game.screen
+        self.screen_rect = self.screen.get_rect()
+        self.settings = it_game.settings
+
+        self.text = text
+        self.font = self.settings.menu_font
+
+        self.rect = pygame.Rect(size)
+
+        self.draw_deactivated()
+
+    def _prepare_text(self, activation):
+        '''placing the text on the screen and centering on the button'''
+        if activation:
+            self.text_color = self.settings.font_col_act
+        else:
+            self.text_color = self.settings.font_col_deact
+        
+        self.text_image = self.font.render(self.text, True, 
+            self.text_color, self.settings.button_color)
+        self.text_rect = self.text_image.get_rect()
+        self.text_rect.center = self.rect.center
+
+
+    def draw_deactivated(self):
+        '''draw deactivated button'''
+
+        self._prepare_text(False)
+        self.draw_button()
+    
+
+    def draw_activated(self):
+        '''draw deactivated button'''
+
+        self._prepare_text(True)
+        self.draw_button()
+
+    def draw_button(self):
+        '''displaying empty button and then a text on it'''
+        self.screen.fill(self.settings.button_color, self.rect)
+        self.screen.blit(self.text_image,self.text_rect)
+        

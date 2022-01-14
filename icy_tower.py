@@ -6,6 +6,7 @@ import random
 import settings
 import floors
 import hero
+import menu
 
 class IcyTower():
     '''
@@ -21,7 +22,20 @@ class IcyTower():
         self.screen = pygame.display.set_mode(
             (self.settings.screen_width,self.settings.screen_height))
         pygame.display.set_caption("Icy_Tower")
+        
+        # self.button = menu.Button(self,(100,100,500,500),'poluska')
 
+        self._init_gameplay()
+
+    def _init_menu(self):
+        '''init the game menu'''
+
+        self.menu = menu.Menu()
+
+
+
+    def _init_gameplay(self):
+        '''init the gameplay screen elements'''
         self.floors = pygame.sprite.Group()
         self._create_initial_floors()
         self.hero = hero.Hero(self)
@@ -38,6 +52,7 @@ class IcyTower():
 
             self.hero.update()
             self._are_new_floors_needed()
+            self._remove_unnecessary_floors()
             self._update_screen()
 
     def _check_events(self):
@@ -126,9 +141,9 @@ class IcyTower():
         dist = highest_floor.rect_outer.top
         
         if dist > self.settings.dist_between_floors/2:
-            self._draw_floor(highest_floor)
+            self._draw_normal_floor(highest_floor)
 
-    def _draw_floor(self, top_floor):
+    def _draw_normal_floor(self, top_floor):
         '''drawing a new floor on the top''' 
         x_pos = random.randint(self.settings.floor_margin, self.settings.
                         screen_width - (self.settings.floor_max_width + 
@@ -143,6 +158,17 @@ class IcyTower():
 
         floor = floors.Floor(self,size)
         self.floors.add(floor)
+
+    def _remove_unnecessary_floors(self):
+        '''remove floors which disappeared while hero was moving up'''
+
+        for floor in self.floors:
+            if (floor.rect_outer.top > self.settings.screen_height + 50):
+                self.floors.remove(floor)
+
+    def _is_hero_fallen(self):
+        '''check if hero fell beyond the screen'''
+        
 
     def _update_screen(self):
         '''refreshing screen in each iteration'''

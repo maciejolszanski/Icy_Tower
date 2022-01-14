@@ -1,3 +1,5 @@
+import pygame
+
 class Settings():
     '''Class that stores all settings'''
 
@@ -26,3 +28,14 @@ class Settings():
         # physics settings
         self.gravity = 1
         self.scroll_v = 2
+
+        # button settings
+        self.menu_font = pygame.font.Font(
+            r'suplemental_files\SnackerComic_PerosnalUseOnly.ttf',72)
+        self.font_col_act = (255,255,255)
+        self.font_col_deact = (0,0,0)
+        self.button_color = (255,128,0)
+        self.button_size = (350, 200)
+
+        # menu settings
+        self.menu_buttons = ['PLAY','HIGHSCORE']
