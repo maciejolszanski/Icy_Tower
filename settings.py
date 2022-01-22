@@ -20,6 +20,9 @@ class Settings():
         self.floor_min_width = 150
         self.floor_max_width = 300
 
+        # game settings
+        self.states = ['MENU', 'GAMEPLAY',]
+
         # hero settings
         self.run_speed = 1.2
         self.jump_v0 = 1.4
@@ -35,7 +38,8 @@ class Settings():
         self.font_col_act = (255,255,255)
         self.font_col_deact = (0,0,0)
         self.button_color = (255,128,0)
-        self.button_size = (350, 200)
+        self.button_width = 350
+        self.button_height = 200
 
         # menu settings
         self.menu_buttons = ['PLAY','HIGHSCORE']

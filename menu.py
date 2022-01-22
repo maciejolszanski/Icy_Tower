@@ -4,25 +4,28 @@ from pygame.sprite import Sprite
 class Menu():
     '''This class creates a menu and handle navigating the menu'''
 
-    def _init_(self, it_game):
+    def __init__(self, it_game):
         '''init the menu with any number of buttons'''
         self.settings = it_game.settings
         self.it_game = it_game
         self.screen = it_game.screen
+        self.screen_rect = self.screen.get_rect()
         self.active_button = 0
 
         self.buttons = pygame.sprite.Group()
-        self.but_width = self.settings.button_size(1)
-        self.but_height = self.settings.button_size(2)
+        self.but_width = self.settings.button_width
+        self.but_height = self.settings.button_height
 
         self._generate_buttons()
 
     def _generate_buttons(self):
         '''generate buttons that creates a menu'''
         for text in self.settings.menu_buttons:
-            size = (self.screen.centerx - self.but_width/2, 300*text.index,
-                self.but_width,self.but_height)
+            size = (self.screen_rect.centerx - self.but_width/2, 
+            300*self.settings.menu_buttons.index(text) + 100, self.but_width,self.
+            but_height)
             button = Button(self.it_game, size, text)
+            self.buttons.add(button)
 
 
     def update_menu(self):
@@ -33,7 +36,12 @@ class Menu():
                 button.draw_activated()
             else:
                 button.draw_deactivated()
-         
+    
+    def draw_menu(self):
+        '''displaying the menu'''
+
+        for button in self.buttons:
+            button.draw_button()
 
 
 class Button(Sprite):

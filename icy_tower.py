@@ -18,6 +18,7 @@ class IcyTower():
 
         pygame.init()
         self.settings = settings.Settings()
+        self.state = 'MENU'
         
         self.screen = pygame.display.set_mode(
             (self.settings.screen_width,self.settings.screen_height))
@@ -25,13 +26,13 @@ class IcyTower():
         
         # self.button = menu.Button(self,(100,100,500,500),'poluska')
 
+        self._init_menu()
         self._init_gameplay()
 
     def _init_menu(self):
         '''init the game menu'''
-
-        self.menu = menu.Menu()
-
+        
+        self.menu = menu.Menu(self)
 
 
     def _init_gameplay(self):
@@ -42,18 +43,26 @@ class IcyTower():
 
     def run_game(self):
         '''Starting the main loop of the game'''
-        while True:
-            self._check_events()
-            if not self.hero.in_air:
-                self.hero.check_falling(self.floors)
-            # check if there is need to scroll the screen
-            if self.hero.moving_up:
-                self._scroll()
 
-            self.hero.update()
-            self._are_new_floors_needed()
-            self._remove_unnecessary_floors()
-            self._update_screen()
+        if self.state == "MENU":
+            while True:
+                self._check_events()
+                self._update_screen()
+        elif self.state == 'GAMEPLAY':
+            while True:
+                self._check_events()
+                if not self.hero.in_air:
+                    self.hero.check_falling(self.floors)
+                # check if there is need to scroll the screen
+                if self.hero.moving_up:
+                    self._scroll()
+
+                self.hero.update()
+                self._are_new_floors_needed()
+                self._remove_unnecessary_floors()
+                self._update_screen()
+        
+        
 
     def _check_events(self):
         '''manage events of the game'''
@@ -168,14 +177,18 @@ class IcyTower():
 
     def _is_hero_fallen(self):
         '''check if hero fell beyond the screen'''
-        
 
     def _update_screen(self):
         '''refreshing screen in each iteration'''
         self.screen.fill(self.settings.bg_color)
-        for floor in self.floors:
-            floor.blitme()
-        self.hero.blitme()
+        if self.state == 'MENU':
+            self.menu.draw_menu()
+            
+        elif self.state == 'GAMEPLAY':
+            for floor in self.floors:
+                floor.blitme()
+            self.hero.blitme()
+
         pygame.display.flip() 
 
 
