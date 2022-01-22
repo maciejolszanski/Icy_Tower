@@ -37,7 +37,10 @@ class Settings():
             r'suplemental_files\SnackerComic_PerosnalUseOnly.ttf',72)
         self.font_col_act = (255,255,255)
         self.font_col_deact = (0,0,0)
-        self.button_color = (255,128,0)
+        self.button_color_act = (255,128,0)
+        self.button_color_deact = (210,105,0)
+        self.button_border_color = (0,0,0)
+        self.button_border_width = 4
         self.button_width = 350
         self.button_height = 150
 

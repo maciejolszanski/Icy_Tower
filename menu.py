@@ -58,18 +58,19 @@ class Button(Sprite):
         self.font = self.settings.menu_font
 
         self.rect = pygame.Rect(size)
-
         self.draw_deactivated()
 
     def _prepare_text(self, activation):
         '''placing the text on the screen and centering on the button'''
         if activation:
             self.text_color = self.settings.font_col_act
+            self.button_color = self.settings.button_color_act
         else:
             self.text_color = self.settings.font_col_deact
-        
+            self.button_color = self.settings.button_color_deact
+
         self.text_image = self.font.render(self.text, True, 
-            self.text_color, self.settings.button_color)
+            self.text_color, self.button_color)
         self.text_rect = self.text_image.get_rect()
         self.text_rect.center = self.rect.center
 
@@ -89,6 +90,9 @@ class Button(Sprite):
 
     def draw_button(self):
         '''displaying empty button and then a text on it'''
-        self.screen.fill(self.settings.button_color, self.rect)
+        pygame.draw.rect(self.screen,self.button_color,
+         self.rect, 0, 10)
+        pygame.draw.rect(self.screen,self.settings.button_border_color,
+         self.rect, self.settings.button_border_width, 10)
         self.screen.blit(self.text_image,self.text_rect)
         
