@@ -32,7 +32,7 @@ class Menu():
         '''draw menu with updated active button'''
 
         for button in self.buttons:
-            if button.index() == self.active_button:
+            if list(self.buttons).index(button) == self.active_button:
                 button.draw_activated()
             else:
                 button.draw_deactivated()

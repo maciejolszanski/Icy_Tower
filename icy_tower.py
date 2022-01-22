@@ -45,25 +45,31 @@ class IcyTower():
         '''Starting the main loop of the game'''
 
         if self.state == "MENU":
-            while True:
-                self._check_events()
-                self._update_screen()
-        elif self.state == 'GAMEPLAY':
-            while True:
-                self._check_events()
-                if not self.hero.in_air:
-                    self.hero.check_falling(self.floors)
-                # check if there is need to scroll the screen
-                if self.hero.moving_up:
-                    self._scroll()
-
-                self.hero.update()
-                self._are_new_floors_needed()
-                self._remove_unnecessary_floors()
-                self._update_screen()
+            self._run_menu()
+        elif self.state == 'PLAY':
+            self._run_gameplay()
+    
+    def _run_menu(self):
+        '''handling the menu'''
+        while True:
+            self._check_events()
+            self._update_screen()
+    
+    def _run_gameplay(self):
+        '''handling the gampeplay'''
+        while True:
+            self._check_events()
+            if not self.hero.in_air:
+                self.hero.check_falling(self.floors)
+            # check if there is need to scroll the screen
+            if self.hero.moving_up:
+                self._scroll()
+            self.hero.update()
+            self._are_new_floors_needed()
+            self._remove_unnecessary_floors()
+            self._is_hero_fallen()
+            self._update_screen()
         
-        
-
     def _check_events(self):
         '''manage events of the game'''
         for event in pygame.event.get():
@@ -77,23 +83,44 @@ class IcyTower():
     def _check_keydown_events(self,event):
         '''check what key is pressed'''
         if event.key == pygame.K_LEFT:
-            self.hero.moving_left = True
-            self.hero.change_x_direction = True
+            if self.state == 'PLAY':
+                self.hero.moving_left = True
+                self.hero.change_x_direction = True
         if event.key == pygame.K_RIGHT:
-            self.hero.moving_right = True
-            self.hero.change_x_direction = True
+            if self.state == 'PLAY':
+                self.hero.moving_right = True
+                self.hero.change_x_direction = True       
+        if event.key == pygame.K_DOWN:
+            if self.state =='MENU':
+                self.menu.active_button += 1
+        if event.key == pygame.K_UP:
+            if self.state =='MENU':
+                self.menu.active_button -= 1
         if event.key == pygame.K_SPACE and not self.hero.in_air:
-            self.hero.jump_start_time = time.time()
-            self.hero.jump_start_y = self.hero.y
-            self.hero.moving_up = True
-            self.hero.jump = True
+            if self.state == 'PLAY':
+                self.hero.jump_start_time = time.time()
+                self.hero.jump_start_y = self.hero.y
+                self.hero.moving_up = True
+                self.hero.jump = True
+        if event.key == pygame.K_RETURN:
+            self._change_state(
+                self.settings.menu_buttons[self.menu.active_button])
 
     def _check_keyup_events(self,event):
         '''check what key is released'''
         if event.key == pygame.K_LEFT:
-            self.hero.moving_left = False
+            if self.state == 'PLAY':
+                self.hero.moving_left = False
         if event.key == pygame.K_RIGHT:
-            self.hero.moving_right = False
+            if self.state == 'PLAY':
+                self.hero.moving_right = False
+
+    def _change_state(self, new_state):
+        '''chenging the state of the game'''
+        self.state = new_state
+        print(self.state)
+        self.run_game()
+
 
     def _create_initial_floors(self):
         '''creating floors that are visible from the beggining of the game'''
@@ -177,14 +204,16 @@ class IcyTower():
 
     def _is_hero_fallen(self):
         '''check if hero fell beyond the screen'''
+        if self.hero.rect.top > self.screen.get_rect().bottom:
+            self._change_state('MENU')
 
     def _update_screen(self):
         '''refreshing screen in each iteration'''
         self.screen.fill(self.settings.bg_color)
         if self.state == 'MENU':
-            self.menu.draw_menu()
+            self.menu.update_menu()
             
-        elif self.state == 'GAMEPLAY':
+        elif self.state == 'PLAY':
             for floor in self.floors:
                 floor.blitme()
             self.hero.blitme()

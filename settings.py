@@ -39,7 +39,7 @@ class Settings():
         self.font_col_deact = (0,0,0)
         self.button_color = (255,128,0)
         self.button_width = 350
-        self.button_height = 200
+        self.button_height = 150
 
         # menu settings
-        self.menu_buttons = ['PLAY','HIGHSCORE']
+        self.menu_buttons = ['PLAY','SETTINGS']
