@@ -25,6 +25,9 @@ class Hero():
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
 
+        self.run_speed = self.settings.run_speed
+        self.jump_power = self.settings.jump_power
+
         # attributes of moving the character
         self.moving_right = False
         self.moving_left = False
@@ -38,15 +41,22 @@ class Hero():
         self.jump_start_time = 0
         self.jump_start_y = 0
         self.drop_start_time = 0
+        
+
+        self.run_start_time = 0
 
         self.do_scroll = False
 
     def update(self):
         '''moving the hero'''
         if self.moving_right and self.rect.right < self.screen_rect.right:
-            self.x += self.settings.run_speed
+            self.x += self.run_speed
+            self._increase_dynamics()
+            print(f"run speed: {self.run_speed}")
         if self.moving_left and self.rect.left > self.screen_rect.left:
-            self.x -= self.settings.run_speed
+            self.x -= self.run_speed
+            self._increase_dynamics()
+            print(f"run speed: {self.run_speed}")
         if self.jump:
             self._fly()
         # flipping the image to match the hero's direction
@@ -60,6 +70,9 @@ class Hero():
     def _fly(self):
         '''control the flight of character'''
         
+        print(f"jump_power: {self.jump_power}")
+
+
         # calculate the time of the flight (+0.3 and *2 to give more dinamics 
         # at the beggining of the flight)
         self.flight_time = (time.time() - self.jump_start_time + 0.1) * 4.5
@@ -86,7 +99,7 @@ class Hero():
             # scale the meters to pixels based on the height of the hero - 1.5m
             self.h_max *= self.hero_size[0]/1.5
             # scale by a factor of the jump power
-            self.h_max *= self.settings.jump_power
+            self.h_max *= self.jump_power
             self.in_air = True
         # then calculate the actual position of the hero
         else:
@@ -152,6 +165,21 @@ class Hero():
         if self.rect.y > self.settings.screen_height/2:
             self.do_scroll = False
         self.rect.y = self.y
+
+    def _increase_dynamics(self):
+        '''faster run and higher jump while running'''
+
+        # the value shoulf be always bigger than 1, becouse we are going to
+        # multiplicate the speed
+        run_time = time.time() - self.run_start_time + 1
+
+        self.run_speed = (self.settings.run_speed * run_time * 
+            self.settings.dyn_factor)
+
+        if not self.in_air:
+            self.jump_power = (self.settings.jump_power * run_time * 
+                self.settings.dyn_factor)
+
 
     def blitme(self):
         '''displaying the hero on the screen'''

@@ -23,8 +23,6 @@ class IcyTower():
         self.screen = pygame.display.set_mode(
             (self.settings.screen_width,self.settings.screen_height))
         pygame.display.set_caption("Icy_Tower")
-        
-        # self.button = menu.Button(self,(100,100,500,500),'poluska')
 
         self._init_menu()
         self._init_gameplay()
@@ -86,10 +84,12 @@ class IcyTower():
             if self.state == 'PLAY':
                 self.hero.moving_left = True
                 self.hero.change_x_direction = True
+                self.hero.run_start_time = time.time()
         if event.key == pygame.K_RIGHT:
             if self.state == 'PLAY':
                 self.hero.moving_right = True
-                self.hero.change_x_direction = True       
+                self.hero.change_x_direction = True     
+                self.hero.run_start_time = time.time() 
         if event.key == pygame.K_DOWN:
             if self.state =='MENU':
                 self.menu.active_button += 1
@@ -111,14 +111,17 @@ class IcyTower():
         if event.key == pygame.K_LEFT:
             if self.state == 'PLAY':
                 self.hero.moving_left = False
+                self.hero.run_speed = self.settings.run_speed
+                self.hero.jump_power = self.settings.jump_power
         if event.key == pygame.K_RIGHT:
             if self.state == 'PLAY':
                 self.hero.moving_right = False
+                self.hero.run_speed = self.settings.run_speed
+                self.hero.jump_power = self.settings.jump_power
 
     def _change_state(self, new_state):
         '''chenging the state of the game'''
         self.state = new_state
-        print(self.state)
         self.run_game()
 
 
@@ -206,6 +209,7 @@ class IcyTower():
         '''check if hero fell beyond the screen'''
         if self.hero.rect.top > self.screen.get_rect().bottom:
             self._change_state('MENU')
+            self.hero
 
     def _update_screen(self):
         '''refreshing screen in each iteration'''
