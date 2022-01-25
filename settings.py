@@ -27,7 +27,8 @@ class Settings():
         self.run_speed = 1.2
         self.jump_v0 = 1.4
         self.jump_power = 5.0
-        self.dyn_factor = 1.05
+        self.dyn_run_factor = 1.05
+        self.dyn_jump_factor = 1.35
 
         # physics settings
         self.gravity = 1

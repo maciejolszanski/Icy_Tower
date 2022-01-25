@@ -124,7 +124,6 @@ class IcyTower():
         self.state = new_state
         self.run_game()
 
-
     def _create_initial_floors(self):
         '''creating floors that are visible from the beggining of the game'''
 
@@ -207,9 +206,22 @@ class IcyTower():
 
     def _is_hero_fallen(self):
         '''check if hero fell beyond the screen'''
+
+        print(self.hero.rect.top > self.screen.get_rect().bottom)
+        print(self.hero.rect.top)
+        print(self.screen.get_rect().bottom)
+
         if self.hero.rect.top > self.screen.get_rect().bottom:
+            
+            for floor in self.floors:
+                floor.kill()
+            
+            self._create_initial_floors()
+            self.hero.spawn_on_the_base_floor(self.floors)
+            self.hero.moving_down = False
+            self.hero.in_air = False
+            self.hero.jump = False
             self._change_state('MENU')
-            self.hero
 
     def _update_screen(self):
         '''refreshing screen in each iteration'''

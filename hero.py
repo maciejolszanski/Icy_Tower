@@ -17,10 +17,8 @@ class Hero():
         self.image = pygame.image.load('images/hero.png')
         self.image = pygame.transform.scale(self.image, self.hero_size)
         self.rect = self.image.get_rect()
-        # spawn hero on the middle of the first floor
-        for floor in it_game.floors:
-            self.rect.midbottom = floor.rect_outer.midtop
-            break
+
+        self.spawn_on_the_base_floor(self.it_game.floors)
 
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
@@ -47,16 +45,24 @@ class Hero():
 
         self.do_scroll = False
 
+    def spawn_on_the_base_floor(self, floors):
+        '''spawn the hero on the first floor'''
+        # spawn hero on the middle of the first floor
+        print(f"hero przed {self.rect.top}")
+        for floor in floors:
+            self.rect.midbottom = floor.rect_outer.midtop
+            self.y = self.rect.y
+            break
+        print(f"hero po {self.rect.top}")
+
     def update(self):
         '''moving the hero'''
         if self.moving_right and self.rect.right < self.screen_rect.right:
             self.x += self.run_speed
             self._increase_dynamics()
-            print(f"run speed: {self.run_speed}")
         if self.moving_left and self.rect.left > self.screen_rect.left:
             self.x -= self.run_speed
             self._increase_dynamics()
-            print(f"run speed: {self.run_speed}")
         if self.jump:
             self._fly()
         # flipping the image to match the hero's direction
@@ -69,9 +75,6 @@ class Hero():
 
     def _fly(self):
         '''control the flight of character'''
-        
-        print(f"jump_power: {self.jump_power}")
-
 
         # calculate the time of the flight (+0.3 and *2 to give more dinamics 
         # at the beggining of the flight)
@@ -174,11 +177,11 @@ class Hero():
         run_time = time.time() - self.run_start_time + 1
 
         self.run_speed = (self.settings.run_speed * run_time * 
-            self.settings.dyn_factor)
+            self.settings.dyn_run_factor)
 
         if not self.in_air:
             self.jump_power = (self.settings.jump_power * run_time * 
-                self.settings.dyn_factor)
+                self.settings.dyn_jump_factor)
 
 
     def blitme(self):
