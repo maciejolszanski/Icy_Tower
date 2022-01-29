@@ -1,6 +1,7 @@
 import pygame
 from pygame.sprite import Sprite
 
+
 class Menu():
     '''This class creates a menu and handle navigating the menu'''
 
@@ -21,12 +22,11 @@ class Menu():
     def _generate_buttons(self):
         '''generate buttons that creates a menu'''
         for text in self.settings.menu_buttons:
-            size = (self.screen_rect.centerx - self.but_width/2, 
-            300*self.settings.menu_buttons.index(text) + 100, self.but_width,self.
-            but_height)
+            size = (self.screen_rect.centerx - self.but_width/2,
+                    300*self.settings.menu_buttons.index(text) + 100,
+                    self.but_width, self.but_height)
             button = Button(self.it_game, size, text)
             self.buttons.add(button)
-
 
     def update_menu(self):
         '''draw menu with updated active button'''
@@ -36,7 +36,7 @@ class Menu():
                 button.draw_activated()
             else:
                 button.draw_deactivated()
-    
+
     def draw_menu(self):
         '''displaying the menu'''
 
@@ -69,18 +69,16 @@ class Button(Sprite):
             self.text_color = self.settings.font_col_deact
             self.button_color = self.settings.button_color_deact
 
-        self.text_image = self.font.render(self.text, True, 
-            self.text_color, self.button_color)
+        self.text_image = self.font.render(self.text, True,
+                                           self.text_color, self.button_color)
         self.text_rect = self.text_image.get_rect()
         self.text_rect.center = self.rect.center
-
 
     def draw_deactivated(self):
         '''draw deactivated button'''
 
         self._prepare_text(False)
         self.draw_button()
-    
 
     def draw_activated(self):
         '''draw deactivated button'''
@@ -90,9 +88,8 @@ class Button(Sprite):
 
     def draw_button(self):
         '''displaying empty button and then a text on it'''
-        pygame.draw.rect(self.screen,self.button_color,
-         self.rect, 0, 10)
-        pygame.draw.rect(self.screen,self.settings.button_border_color,
-         self.rect, self.settings.button_border_width, 10)
-        self.screen.blit(self.text_image,self.text_rect)
-        
+        pygame.draw.rect(self.screen, self.button_color,
+                         self.rect, 0, 10)
+        pygame.draw.rect(self.screen, self.settings.button_border_color,
+                         self.rect, self.settings.button_border_width, 10)
+        self.screen.blit(self.text_image, self.text_rect)

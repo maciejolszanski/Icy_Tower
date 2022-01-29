@@ -2,10 +2,11 @@ import pygame
 from pygame.sprite import Sprite
 import settings
 
+
 class Floor(Sprite):
     '''single floor'''
 
-    def __init__(self,it_game,size):
+    def __init__(self, it_game, size):
         # size is (x, y, width, height) tuple
         super().__init__()
         self.it_game = it_game
@@ -28,5 +29,6 @@ class Floor(Sprite):
         self.rect_inner.y += self.settings.scroll_v
 
     def blitme(self):
-        pygame.draw.rect(self.it_game.screen, self.border_color, self.rect_outer)
+        pygame.draw.rect(self.it_game.screen, self.border_color,
+                         self.rect_outer)
         pygame.draw.rect(self.it_game.screen, self.color, self.rect_inner)

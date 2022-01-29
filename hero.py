@@ -1,6 +1,6 @@
-from sys import settrace
 import time
 import pygame
+
 
 class Hero():
     '''Class of the main character of the game'''
@@ -13,7 +13,7 @@ class Hero():
         self.settings = it_game.settings
 
         # Importing hero image and getting his rect
-        self.hero_size = (90,80)
+        self.hero_size = (90, 80)
         self.image = pygame.image.load('images/hero.png')
         self.image = pygame.transform.scale(self.image, self.hero_size)
         self.rect = self.image.get_rect()
@@ -39,7 +39,6 @@ class Hero():
         self.jump_start_time = 0
         self.jump_start_y = 0
         self.drop_start_time = 0
-        
 
         self.run_start_time = 0
 
@@ -48,12 +47,10 @@ class Hero():
     def spawn_on_the_base_floor(self, floors):
         '''spawn the hero on the first floor'''
         # spawn hero on the middle of the first floor
-        print(f"hero przed {self.rect.top}")
         for floor in floors:
             self.rect.midbottom = floor.rect_outer.midtop
             self.y = self.rect.y
             break
-        print(f"hero po {self.rect.top}")
 
     def update(self):
         '''moving the hero'''
@@ -76,7 +73,7 @@ class Hero():
     def _fly(self):
         '''control the flight of character'''
 
-        # calculate the time of the flight (+0.3 and *2 to give more dinamics 
+        # calculate the time of the flight (+0.3 and *2 to give more dinamics
         # at the beggining of the flight)
         self.flight_time = (time.time() - self.jump_start_time + 0.1) * 4.5
         # round the time to x.yz [s]
@@ -87,13 +84,13 @@ class Hero():
 
         '''First jump method'''
         # # physics of the jump - actual y position
-        # self.y -= (self.settings.jump_v0*self.flight_time - 
+        # self.y -= (self.settings.jump_v0*self.flight_time -
         #         1/2*(self.settings.gravity*self.flight_time**2))
-        
+
         # # not allow to move down in first seconds
         # if self.y > self.jump_start_y and self.flight_time < 0.1:
         #     self.y = self.jump_start_y
-        
+
         '''Second jump method'''
         # at first calculate the max height of jump
         if not self.in_air:
@@ -118,10 +115,10 @@ class Hero():
                     self.scroll()
             # moving down is a free fall
             elif self.moving_down:
-                self.y +=  1/2 * (self.settings.gravity * self.drop_time**2)
+                self.y += 1/2 * (self.settings.gravity * self.drop_time**2)
                 self._check_collision(self.it_game.floors)
-            
-        # update the image y-pos    
+
+        # update the image y-pos
         self.rect.y = self.y
 
     def _check_collision(self, floors):
@@ -129,31 +126,32 @@ class Hero():
 
         for floor in floors:
             # check if the hero x position is inside any floor position
-            if self.rect.centerx in range(floor.rect_outer.left, 
-                                        floor.rect_outer.right):
-                # then check if the y position of the hero is slightly beneath the 
-                # floor
-                if (self.rect.bottom > (floor.rect_outer.top)  
-                    and self.rect.bottom < floor.rect_outer.top + 5
-                    and self.flight_time > 0.1): 
+            if self.rect.centerx in range(floor.rect_outer.left,
+                                          floor.rect_outer.right):
+                # then check if the y position of the hero is slightly
+                # beneath the floor
+                if (self.rect.bottom > (floor.rect_outer.top)
+                        and self.rect.bottom < floor.rect_outer.top + 5
+                        and self.flight_time > 0.1):
                     self.rect.bottom = floor.rect_outer.top
                     self.y = self.rect.top
                     self.moving_down = False
                     self.in_air = False
                     self.jump = False
                     break
-    
+
     def check_falling(self, floors):
         '''check if hero stepped out from a floor'''
 
         for floor in floors:
             # checking what floor is hero on
             # first check the y-position of hero and floors
-            if self.rect.bottom in range(floor.rect_outer.top 
-                - self.settings.dist_between_floors  + 20, floor.rect_outer.top + 10):
+            if self.rect.bottom in range(floor.rect_outer.top
+                                         - self.settings.dist_between_floors
+                                         + 20, floor.rect_outer.top + 10):
                 # then check if hero is outside this floor
-                if self.rect.centerx not in list(range(floor.rect_outer.left, 
-                                        floor.rect_outer.right)):
+                if self.rect.centerx not in list(range(floor.rect_outer.left,
+                                                 floor.rect_outer.right)):
                     self.moving_down = True
                     self.jump = True
                     self.in_air = True
@@ -176,15 +174,13 @@ class Hero():
         # multiplicate the speed
         run_time = time.time() - self.run_start_time + 1
 
-        self.run_speed = (self.settings.run_speed * run_time * 
-            self.settings.dyn_run_factor)
+        self.run_speed = (self.settings.run_speed * run_time *
+                          self.settings.dyn_run_factor)
 
         if not self.in_air:
-            self.jump_power = (self.settings.jump_power * run_time * 
-                self.settings.dyn_jump_factor)
-
+            self.jump_power = (self.settings.jump_power * run_time *
+                               self.settings.dyn_jump_factor)
 
     def blitme(self):
         '''displaying the hero on the screen'''
         self.screen.blit(self.image, self.rect)
-        # print(self.rect.x)
