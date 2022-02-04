@@ -17,6 +17,7 @@ class Hero():
         self.image = pygame.image.load('images/hero.png')
         self.image = pygame.transform.scale(self.image, self.hero_size)
         self.rect = self.image.get_rect()
+        self.looking_right = True
 
         self.spawn_on_the_base_floor(self.it_game.floors)
 

@@ -82,12 +82,18 @@ class IcyTower():
         if event.key == pygame.K_LEFT:
             if self.state == 'PLAY':
                 self.hero.moving_left = True
-                self.hero.change_x_direction = True
+                # change the direction of hero looking
+                if self.hero.looking_right:
+                    self.hero.change_x_direction = True
+                    self.hero.looking_right = False
                 self.hero.run_start_time = time.time()
         if event.key == pygame.K_RIGHT:
             if self.state == 'PLAY':
                 self.hero.moving_right = True
-                self.hero.change_x_direction = True
+                # change the direction of hero looking
+                if not self.hero.looking_right:
+                    self.hero.change_x_direction = True
+                    self.hero.looking_right = True
                 self.hero.run_start_time = time.time()
         if event.key == pygame.K_DOWN:
             if self.state == 'MENU':
