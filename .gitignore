@@ -1,3 +1,8 @@
 __pycache__/
-images/
+
+# Images for test purposes
+images/hero_moj_tlo.png
+image/hero_zly/png
+
+# my font on only personal use license
 suplemental_files/
