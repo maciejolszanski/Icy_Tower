@@ -217,6 +217,8 @@ class IcyTower():
             self.hero.moving_down = False
             self.hero.in_air = False
             self.hero.jump = False
+            self.hero.moving_left = False
+            self.hero.moving_right = False
             self._change_state('MENU')
 
     def _update_screen(self):
