@@ -36,8 +36,11 @@ class Settings():
         self.scroll_v = 2
 
         # button settings
-        self.menu_font = pygame.font.Font(
-            r'suplemental_files\SnackerComic_PerosnalUseOnly.ttf', 72)
+        try:
+            self.menu_font = pygame.font.Font(
+                r'suplemental_files\SnackerComic_PerosnalUseOnly.ttf', 72)
+        except:
+            self.menu_font = pygame.font.SysFont(None, 72)
         self.font_col_act = (255, 255, 255)
         self.font_col_deact = (0, 0, 0)
         self.button_color_act = (255, 128, 0)
