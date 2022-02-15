@@ -13,11 +13,11 @@ class Hero():
         self.settings = it_game.settings
 
         # Importing hero image and getting his rect
-        self.hero_size = (90, 80)
-        self.image = pygame.image.load('images/hero.png')
+        self.hero_size = (60, 80)
+        self.image = pygame.image.load('images/hero_squid2.png')
         self.image = pygame.transform.scale(self.image, self.hero_size)
         self.rect = self.image.get_rect()
-        self.looking_right = True
+        self.looking_right = False
 
         self.spawn_on_the_base_floor(self.it_game.floors)
 
